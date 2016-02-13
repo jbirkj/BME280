@@ -21,7 +21,7 @@ def GLog(dT, hP, rH, tC):
             #raise  gspread.exceptions.HTTPError()
         
             gc = gspread.authorize(credentials)
-            wks = gc.open("TestOauthSheet").sheet1
+            wks = gc.open("TestOauthSheet2").sheet1
 
             values = [dT, 'BME280', hP, rH, tC]
 
