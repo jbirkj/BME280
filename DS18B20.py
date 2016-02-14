@@ -18,11 +18,11 @@ def OneW_init():
     device_folder = glob.glob(base_dir + '28*')[0]
     device_file = device_folder + '/w1_slave'
     #device_file1 = '/sys/bus/w1/devices/28-0000049cd8a6/w1_slave'
-    #device_file2 = '/sys/bus/w1/devices/28-000005454cf7/w1_slave'
+    device_file2 = '/sys/bus/w1/devices/28-000005454cf7/w1_slave'
     device_file3 = '/sys/bus/w1/devices/28-000004e01b0c/w1_slave'
 
     #return device_file1, device_file2, device_file3
-    return device_file3
+    return device_file2, device_file3
    
 
 

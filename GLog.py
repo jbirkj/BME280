@@ -5,7 +5,7 @@ import gspread
 from oauth2client.client import SignedJwtAssertionCredentials
 
 
-def GLog(dT, hP, rH, tC):
+def GLog(dT, hP, rH, tC, TC1, TC2 ):
 
     retry = 3
     while retry > 0:
@@ -23,7 +23,7 @@ def GLog(dT, hP, rH, tC):
             gc = gspread.authorize(credentials)
             wks = gc.open("TestOauthSheet2").sheet1
 
-            values = [dT, 'BME280', hP, rH, tC]
+            values = [dT, 'BME280', hP, rH, tC, 'DS18B20', TC1, TC2]
 
             wks.append_row(values)
 
@@ -31,7 +31,6 @@ def GLog(dT, hP, rH, tC):
 
             retry = 0
             
-
         except gspread.exceptions.HTTPError:
             time.sleep(5)
             print("exception caught no ", retry, " at ", datetime.datetime.now() )
