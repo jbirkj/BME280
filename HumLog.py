@@ -26,7 +26,11 @@ try:
         
         print(count, "On", t.day, "at", t.hour,':', t.minute, "measure ", float(values[2]),
               "temp ds18b20 ", "#3", TC_device3, ", #2", TC_device2  )
-        #time.sleep(60)
+
+        #time.sleep(300)
+        for i in range(1, 30):      #prevent system hang by waiting range(30) seconds
+            time.sleep(1)
+
         count = count + 1
         
 
