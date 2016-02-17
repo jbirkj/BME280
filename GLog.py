@@ -7,9 +7,6 @@ from oauth2client.client import SignedJwtAssertionCredentials
 
 def GLog(dT, hP, rH, tC, TC1, TC2 ):
 
-    retry = 3
-    while retry > 0:
-    
         try:
 
             json_key = json.load(open('Uploader-8ffdcddb7d70.json'))
@@ -29,13 +26,14 @@ def GLog(dT, hP, rH, tC, TC1, TC2 ):
 
             #print( "exception not hit" )
 
-            retry = 0
-            
         except gspread.exceptions.HTTPError:
-            time.sleep(5)
-            print("exception caught no ", retry, " at ", datetime.datetime.now() )
-            retry -= 1
+            time.sleep(10)
+            print("exception gspread HTTPError caught at ", datetime.datetime.now() )
 
+        except OSError as e:
+            # 101 is "network is unreachable"
+            print("Exception OSError occurred #", e, " at ", datetime.datetime.now() )
+            time.sleep(10)
 
 
     
