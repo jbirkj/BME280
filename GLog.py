@@ -2,10 +2,13 @@
 import time,datetime
 import json
 import gspread
+import logging
 from oauth2client.client import SignedJwtAssertionCredentials
 
 
 def GLog(dT, hP, rH, tC, TC1, TC2 ):
+
+        logging.basicConfig(filename="GLog.log", level=logging.INFO)
 
         try:
 
@@ -29,11 +32,13 @@ def GLog(dT, hP, rH, tC, TC1, TC2 ):
         except gspread.exceptions.HTTPError:
             time.sleep(10)
             print("exception gspread HTTPError caught at ", datetime.datetime.now() )
+            logging.info("gspread exception")
 
         except OSError as e:
             # 101 is "network is unreachable"
             print("Exception OSError occurred #", e, " at ", datetime.datetime.now() )
             time.sleep(10)
+            logging.info("OSerror exception")
 
 
     
