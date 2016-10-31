@@ -1,14 +1,17 @@
 # HumLog.py
 import logging
 import datetime, time
-import RPi_I2C_driver
+#import RPi_I2C_driver
 #import LCD
+import sys
+
 from GLog import GLog
 from BME280 import BME280read
 from DS18B20 import read_temp, OneW_init
 from IFTTTlog import IFTTTGLog
 from UBILog import UBILog
 from LCD import *
+from ubidots import *
 
 logging.basicConfig(filename="BME280LOG.log", level=logging.INFO )
 
@@ -33,8 +36,8 @@ print("3")
 LCD_write("date "+str(Time[2])+"/"+str(Time[1]) + " at " + str(Time[3]) + ":" + str(Time[3]),2 )
 print("4")
 interval = 10   # initialize interval to 10 seconds
-try:
-    while True:
+while True: 
+    try:
         t = datetime.datetime.now()
         
         values = BME280read()
@@ -64,10 +67,13 @@ try:
         count = count + 1
         
 
-except KeyboardInterrupt:
+    except KeyboardInterrupt:
+        print("Program interrupted by Keyboard!")
+        logging.info("Program exit" )
+        break
 
-    print("Program interrupted by Keyboard!")
-    logging.info("Program exit" )
-
+    except:
+        print("unknown exception in HumLog.py :", sys.exc_info()[0])
+        interval = 40   #retry in 40 secs
 
 print("Goodbye")
