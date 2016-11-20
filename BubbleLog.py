@@ -81,19 +81,19 @@ while True:
         print("Program interrupted by Keyboard!")
         logging.info("Program exit" )
         break
-    '''
-    except UbidotsError400 as e:
-            print("Code Exception: Error400 in BubbleLog.py", e.message, " and the details: ", e.detail)
+    
 
-    except UbidotsError403 as e:
-            print("Code exception: Error403 in BubbleLog.py: ", e.message, " and the details: ", e.detail)
-
-    except UbidotsError404 as e:
-            print("Code exception: Error404 in BubbleLog.py: ", e.message, " and the details: ", e.detail)
-
-    except UbidotsError405 as e:
-            print("Code exception: Error405 in BubbleLog.py: ", e.message, " and the details: ", e.detail)
-    '''
+#    except UbidotsError400 as e:
+#            print("Code Exception: Error400 in BubbleLog.py", e.message, " and the details: ", e.detail)
+#
+#    except UbidotsError403 as e:
+#            print("Code exception: Error403 in BubbleLog.py: ", e.message, " and the details: ", e.detail)
+#
+#    except UbidotsError404 as e:
+#            print("Code exception: Error404 in BubbleLog.py: ", e.message, " and the details: ", e.detail)
+#
+#    except UbidotsError405 as e:
+#            print("Code exception: Error405 in BubbleLog.py: ", e.message, " and the details: ", e.detail)
     except:
         print("unknown exception in BubbleLog.py :", sys.exc_info()[0])
         interval = 40   #retry in 40 secs
