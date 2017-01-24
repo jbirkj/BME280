@@ -8,6 +8,7 @@ import RPi.GPIO as GPIO
 from UBI_Bubble_Log import UBILog
 from ubidots import ApiClient
 from LCD import *
+from DS18B20 import read_temp, OneW_init
 
 logging.basicConfig(filename="UbiBubbleLog.log", level=logging.INFO )
 
@@ -17,6 +18,7 @@ PIR_PIN = 7
 PhotoPIN = 17
 GPIO.setup(PhotoPIN, GPIO.IN)
 
+deviceFile2, deviceFile3 = OneW_init()
 
 tNow = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
 t = datetime.datetime.now()
@@ -35,8 +37,8 @@ interval = 10   # initialize interval to 10 seconds
 
 def MOTION(PIR_PIN):
     global BubCount
-    print("Motion detected" + str(BubCount))
     BubCount +=1
+#    print("Motion detected" + str(BubCount))
     LCD_write(", now " + str(BubCount),2 )
     
     
@@ -49,7 +51,7 @@ GPIO.add_event_detect(PhotoPIN, GPIO.RISING, callback=MOTION, bouncetime=200)
 while True: 
     try:
 
-        print("entering loop")
+#        print("entering loop")
         '''       
         if GPIO.input(PIR_PIN):
             print("Motion detected")
@@ -58,13 +60,18 @@ while True:
         time.sleep(900)    #1800 = half hour
 
         t = datetime.datetime.now()
+
+        TC_device2 = read_temp(deviceFile2)
+        TC_device3 = read_temp(deviceFile3)
+        
+#        print( "measure temp ds18b20 ", "#3", TC_device3, ", #2", TC_device2  )
         
         LCD_clear()
         LCD_write("date "+str(t.day)+"/"+str(t.month) + " at " + str(t.hour) + ":" + str(t.minute),1 )
         LCD_write("last bubble count:" + str(BubCount),2 )
 
         old_interval = interval
-        interval = UBILog(BubCount)       
+        interval = UBILog(BubCount, TC_device2, TC_device3)       
         '''
         if interval != old_interval:
             print("new inteval set to ", interval)

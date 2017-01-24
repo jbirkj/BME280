@@ -3,7 +3,7 @@ from ubidots import ApiClient
 from key import ubiKEY
 import logging
 
-def UBILog( BC ):
+def UBILog( BC, Temp1, Temp2 ):
 
         try:
                 api = ApiClient(ubiKEY)
@@ -22,9 +22,15 @@ def UBILog( BC ):
 
         varBubbles = api.get_variable('5820ee3276254272738bb134')
 #                varInterval = api.get_variable('57f89eb476254264592de214')
+        varBubTemp2 = api.get_variable('58879f4476254260ed35e396')	#room temp (raw component)
+        
+        varBubTemp3 = api.get_variable('57f9492d7625426071c1d3ee')	#fermentor temp (metal tip probe)
+        
                 
                 # save values to ubidots cloud
         response1 = varBubbles.save_value({'value':BC})
+        response2 = varBubTemp2.save_value({'value':Temp1})
+        response3 = varBubTemp3.save_value({'value':Temp2})
                 
                 #get value from ubidots cloud
 #                intInterval = int(varInterval.get_values(1)[0]['value'])
