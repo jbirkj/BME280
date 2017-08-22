@@ -12,11 +12,15 @@ from DS18B20 import read_temp, OneW_init
 
 logging.basicConfig(filename="UbiBubbleLog.log", level=logging.INFO )
 
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setwarnings(False)
 
-PIR_PIN = 7
-PhotoPIN = 17
+PhotoPIN = 11
 GPIO.setup(PhotoPIN, GPIO.IN)
+heatPin = 10
+GPIO.setup(heatPin, GPIO.OUT, initial=1)
+coolPin = 12
+GPIO.setup(coolPin, GPIO.OUT, initial=1)
 
 deviceFile2, deviceFile3 = OneW_init()
 
@@ -25,6 +29,7 @@ t = datetime.datetime.now()
 Time = t.timetuple()
 count = 0
 BubCount = 0
+FermentTarget = float(sys.argv[1])
 
 logging.info("Program started ")
 
@@ -35,43 +40,46 @@ LCD_write("abcd1234",1)
 print("3")
 interval = 10   # initialize interval to 10 seconds
 
-def MOTION(PIR_PIN):
+def MOTION(PhotoPIN):
     global BubCount
     BubCount +=1
 #    print("Motion detected" + str(BubCount))
     LCD_write(", now " + str(BubCount),2 )
-    
-    
-
-print("starting...")
 
 GPIO.add_event_detect(PhotoPIN, GPIO.RISING, callback=MOTION, bouncetime=200)
 #GPIO.add_event_detect(PhotoPIN, GPIO.BOTH, callback=MOTION, bouncetime=200)
+    
+def adjustTemp(pin, secs):
+    GPIO.output(pin, GPIO.LOW)   #start heat
+    while secs:
+        time.sleep(1)
+        secs -=1
+    GPIO.output(pin, GPIO.HIGH)  #end heat
+
+print("starting... target = " + str(FermentTarget))
 
 while True: 
     try:
-
-#        print("entering loop")
-        '''       
-        if GPIO.input(PIR_PIN):
-            print("Motion detected")
-            BubCount +=1
-        '''        
-        time.sleep(900)    #1800 = half hour
-
+        time.sleep(10)    #1800 = half hour
+            
         t = datetime.datetime.now()
 
         TC_device2 = read_temp(deviceFile2)
-        TC_device3 = read_temp(deviceFile3)
-        
-#        print( "measure temp ds18b20 ", "#3", TC_device3, ", #2", TC_device2  )
-        
+        TC_device3 = read_temp(deviceFile3) #ferment temperature
+
+        print( "measure temp ds18b20 ", "#3", TC_device3, ", #2", TC_device2  )       
         LCD_clear()
         LCD_write("date "+str(t.day)+"/"+str(t.month) + " at " + str(t.hour) + ":" + str(t.minute),1 )
         LCD_write("last bubble count:" + str(BubCount),2 )
 
+        if TC_device3 < (FermentTarget-0.5):
+            adjustTemp(heatPin, 3)
+        elif TC_device3 > (FermentTarget+0.5):
+            adjustTemp(coolPin, 3)
+
+
         old_interval = interval
-        interval = UBILog(BubCount, TC_device2, TC_device3)       
+        interval = UBILog(BubCount, TC_device2, TC_device3)       #(bubbles, room, ferment)
         '''
         if interval != old_interval:
             print("new inteval set to ", interval)
