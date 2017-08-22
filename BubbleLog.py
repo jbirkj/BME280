@@ -7,7 +7,7 @@ import RPi.GPIO as GPIO
 
 from UBI_Bubble_Log import UBILog
 from ubidots import ApiClient
-from LCD import *
+#from LCD import *
 
 logging.basicConfig(filename="UbiBubbleLog.log", level=logging.INFO )
 
@@ -27,17 +27,17 @@ BubCount = 0
 logging.info("Program started ")
 
 print("1")
-LCD_clear()
+#LCD_clear()
 print("2")
-LCD_write("abcd1234",1)
+#LCD_write("abcd1234",1)
 print("3")
 interval = 10   # initialize interval to 10 seconds
 
 def MOTION(PIR_PIN):
     global BubCount
-    print("Motion detected" + str(BubCount))
+#    print("Motion detected" + str(BubCount))
     BubCount +=1
-    LCD_write(", now " + str(BubCount),2 )
+#    LCD_write(", now " + str(BubCount),2 )
     
     
 
@@ -49,7 +49,7 @@ GPIO.add_event_detect(PhotoPIN, GPIO.RISING, callback=MOTION, bouncetime=200)
 while True: 
     try:
 
-        print("entering loop")
+#        print("entering loop")
         '''       
         if GPIO.input(PIR_PIN):
             print("Motion detected")
@@ -59,9 +59,9 @@ while True:
 
         t = datetime.datetime.now()
         
-        LCD_clear()
-        LCD_write("date "+str(t.day)+"/"+str(t.month) + " at " + str(t.hour) + ":" + str(t.minute),1 )
-        LCD_write("last bubble count:" + str(BubCount),2 )
+#        LCD_clear()
+#        LCD_write("date "+str(t.day)+"/"+str(t.month) + " at " + str(t.hour) + ":" + str(t.minute),1 )
+#        LCD_write("last bubble count:" + str(BubCount),2 )
 
         old_interval = interval
         interval = UBILog(BubCount)       
